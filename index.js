@@ -11,7 +11,19 @@ app.use(express.static("public"));
 const io = socket(server);
 
 io.on('connection',(socket)=>{
-    console.log(` Connection with io is established with ${socket.id}`); 
+    console.log(`${socket.id} is connecting `);
+    socket.on('chat-mess',(data)=>{
+        io.sockets.emit('chat-mess',data);
+        //console.log(data);
+    })
+    socket.on("typing", data=>{
+        socket.broadcast.emit('typing',data);
+        console.log(data);
+    });
+})
+
+app.get('/',(req,res)=>{
+    res.sendFile(__dirname`/public/index.html`);
 })
 
 
